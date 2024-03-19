@@ -1,19 +1,22 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Brandon689/jp-primereact-go-mpv/handlers"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/files", handlers.HandleFiles)
-	http.HandleFunc("/files2", handlers.HandleFiles2)
-	http.HandleFunc("/send-data", handlers.HandleData)
-	http.HandleFunc("/send-path", handlers.HandlePath)
-	http.HandleFunc("/files3", handlers.HandleFiles3)
 
-	http.Handle("/", http.FileServer(http.Dir("./frontend/primereact-ui")))
+	v := handlers.ListFilesAll("C:\\2024\\6\\golang-gpt-todo-echo-gorm")
+	jsonData, _ := json.Marshal(v)
+	fmt.Println(string(jsonData))
+	fmt.Println(v)
+
+	http.HandleFunc("/files", handlers.HandleGetFilesAndDirectories)
+
+	http.Handle("/", http.FileServer(http.Dir("./frontend/primereact-ui/dist")))
 	fmt.Println("Server listening on port 8080")
 	http.ListenAndServe(":8080", nil)
 }
